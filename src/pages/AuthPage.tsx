@@ -33,8 +33,13 @@ export function AuthPage() {
       }
       const { error } = await signUp(email, password, displayName)
       if (!error) {
-        setNotice('Account created! Please check your email to confirm, or sign in.')
-        setMode('signin')
+        const currentUser = useAuth.getState().user
+        if (currentUser) {
+          navigate('/progress')
+        } else {
+          setNotice('Account created! Please check your email to confirm, or sign in.')
+          setMode('signin')
+        }
       }
     }
   }

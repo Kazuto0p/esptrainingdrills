@@ -98,8 +98,13 @@ export const useAuth = create<AuthState>((set, get) => ({
 
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) {
-      set({ loading: false, error: error.message })
-      return { error }
+      let friendlyMsg = error.message
+      if (error.message.toLowerCase().includes('rate limit')) {
+        friendlyMsg =
+          'Email rate limit reached on Supabase. Please turn off "Confirm email" in your Supabase Dashboard -> Authentication -> Providers -> Email.'
+      }
+      set({ loading: false, error: friendlyMsg })
+      return { error: new Error(friendlyMsg) }
     }
 
     if (data.user) {
@@ -140,8 +145,13 @@ export const useAuth = create<AuthState>((set, get) => ({
     })
 
     if (error) {
-      set({ loading: false, error: error.message })
-      return { error }
+      let friendlyMsg = error.message
+      if (error.message.toLowerCase().includes('rate limit')) {
+        friendlyMsg =
+          'Email rate limit reached on Supabase. Please turn off "Confirm email" in your Supabase Dashboard -> Authentication -> Providers -> Email.'
+      }
+      set({ loading: false, error: friendlyMsg })
+      return { error: new Error(friendlyMsg) }
     }
 
     if (data.user) {
